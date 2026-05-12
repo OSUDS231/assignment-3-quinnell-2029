@@ -41,14 +41,14 @@ def input_check(secret_word):
     while True:
         raw_guess = input("Your guess: ")
 
-        user_guess = ""
+        guess_cleaned = ""
 
         for char in raw_guess:
             if char.isalpha():
-                user_guess += char.lower()
+                guess_cleaned += char.lower()
 
-        if sorted(user_guess) == sorted(secret_word):
-            return user_guess
+        if sorted(guess_cleaned) == sorted(secret_word):
+            return guess_cleaned
         else:
             print("Invalid input. Please use only the letters from the secret word.")
 
@@ -62,7 +62,7 @@ def has_player_won(secret_word, user_guess):
 # Task 1.3 
 def get_word_progress(secret_word, user_guess):
     progress = ""
-    for n in secret_word.length:
+    for n in range(len(secret_word)):
         if secret_word[n] == user_guess[n]:
             progress += secret_word[n]
         else:
@@ -74,13 +74,24 @@ def get_word_progress(secret_word, user_guess):
 # Task 2.1, 2.2 
 def word_scramble():
     word_list = load_words()
-    number = 5
+    attempts = 5
     secret_word = choose_word(word_list)
-    scrambled_word = scramble_word(secret_word)
     print("Welcome to Word Scramble!")
-    print(f"Scrambled word: {scrambled_word}")
-    print(f"You have {number} attempts to guess the original word")
-
+    scramble_word(secret_word)
+    print(f"You have {attempts} attempts to guess the original word.")
+    print()
+    while attempts >0:
+        user_guess = input_checK(secret_word)
+        if has_player_won(secret_word, user_guess):
+            print(f"Congratulations! You guessed the word: {secret_word}")
+            return
+        else:
+            attempts -= 1
+            progress = get_word_progress(secret_word, user_guess)
+            print(f"Incorrect. Progress: {progress}")
+            print(f"Attempts left: {attempts}")
+            print()
+    print(f"Sorry, you ran out of guesses. The word was {secret_word}.")
 
 if __name__ == "__main__":
     word_scramble()
